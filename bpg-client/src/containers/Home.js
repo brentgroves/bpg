@@ -1,11 +1,15 @@
 import React from 'react';
 import { FormGroup, FormControl, ControlLabel } from "react-bootstrap";
-import DateTime from 'react-datetime'
-import 'react-datetime/css/react-datetime.css'
+import 'react-widgets/dist/css/react-widgets.css';
+import DateTimePicker from 'react-widgets/lib/DateTimePicker';
 var moment = require('moment');
+var momentLocalizer = require('react-widgets/lib/localizers/moment');
+var dateFormat = require('dateformat');
+
+//var moment = require('moment');
 //import '../../node_modules/react-bootstrap-date-time-picker/lib/react-bootstrap-date-time-picker.css'
 var yesterday = moment().subtract( 1, 'day' );
-
+momentLocalizer(moment);
 
 export default class Home extends React.Component {
   constructor(props) {
@@ -22,13 +26,6 @@ export default class Home extends React.Component {
     this.handleStartDateChange = this.handleStartDateChange.bind(this);
     // This binding is necessary to make `this` work in the callback
     this.handleEndDateChange = this.handleEndDateChange.bind(this);
-    // This binding is necessary to make `this` work in the callback
-    this.validateStartDate = this.validateStartDate.bind(this);
-    // This binding is necessary to make `this` work in the callback
-    this.validateEndDate = this.validateEndDate.bind(this);
-
-    // This binding is necessary to make `this` work in the callback
-    this.validateForm = this.validateForm.bind(this);
 
   }
 
@@ -67,23 +64,48 @@ export default class Home extends React.Component {
   }
 
 
-  validDate( current ){
-    // return current.isAfter( yesterday );
-    // return true if end date is greater than start date
-    return true;
+
+
+
+  handleStartDateChange(name,value)
+  {
+
+    this.setState({ startDate: value});
   }
 
-   handleStartDateChange = current => {
-    this.setState({ startDate: current._d });
-  }
-
-   handleEndDateChange = current => {
-    this.setState({ endDate: current._d });
+  handleEndDateChange(name,value)
+  {
+    this.setState({ endDate: value});
   }
  
   render() {
     return (
       <div>
+        <form onSubmit={this.handleSubmit}>
+          <FormGroup controlId="startDate" validationState={this.validateStartDate()}  bsSize="large">
+            <ControlLabel>Start</ControlLabel>
+              <DateTimePicker 
+                onChange={this.handleStartDateChange}
+                defaultValue={new Date()} 
+                />
+          <FormControl.Feedback />
+          </FormGroup>
+          <FormGroup controlId="endDate" validationState={this.validateEndDate()}  bsSize="large">
+            <ControlLabel>End</ControlLabel>
+              <DateTimePicker 
+                onChange={this.handleEndDateChange}
+                defaultValue={new Date()} 
+              />
+          <FormControl.Feedback />
+          </FormGroup>
+
+        </form>
+      </div>
+    )
+  }
+}
+
+/*
         <form onSubmit={this.handleSubmit}>
           <FormGroup controlId="startDate" validationState={this.validateStartDate()}  bsSize="large">
             <ControlLabel>Start</ControlLabel>
@@ -97,8 +119,4 @@ export default class Home extends React.Component {
           </FormGroup>
 
         </form>
-      </div>
-    )
-  }
-}
-
+*/
