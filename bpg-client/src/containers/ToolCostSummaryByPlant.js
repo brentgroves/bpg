@@ -1,5 +1,5 @@
 import React from 'react';
-import { FormGroup, FormControl, ControlLabel,Panel,Row,Col} from "react-bootstrap";
+import { FormGroup, FormControl, ControlLabel,Panel,Row,Col,Checkbox} from "react-bootstrap";
 import 'react-widgets/dist/css/react-widgets.css';
 import Moment from 'moment'
 import momentLocalizer from 'react-widgets-moment';
@@ -15,68 +15,6 @@ jsreport.serverUrl = 'http://localhost:5488';
 
 Moment.locale('en')
 momentLocalizer()
-
-/**
- * React component which renders the given content into an iframe.
- * Additionally an array of stylesheet urls can be passed. They will 
- * also be loaded into the iframe.
- */
-class ExampleContainer extends React.Component {
-    
-    static propTypes = {
-    //    content: React.PropTypes.string.isRequired,
-   //     stylesheets: React.PropTypes.arrayOf(React.PropTypes.string),
-    };
-
-    /**
-     * Called after mounting the component. Triggers initial update of
-     * the iframe
-     */
-    componentDidMount() {
-        this._updateIframe();
-    }
-
-    /**
-     * Called each time the props changes. Triggers an update of the iframe to
-     * pass the new content
-     */
-    componentDidUpdate() {
-        this._updateIframe();
-    }
-
-    /**
-     * Updates the iframes content and inserts stylesheets.
-     * TODO: Currently stylesheets are just added for proof of concept. Implement
-     * and algorithm which updates the stylesheets properly.
-     */
-    _updateIframe() {
-//        const iframe = this.refs.iframe;
-//        iframe.src=this.content;
-        document.getElementById('rpt').src = this.content;
-        /*
-
-        const iframe = this.refs.iframe;
-        const document = iframe.contentDocument;
-        const head = document.getElementsByTagName('head')[0];
-        document.body.innerHTML = this.props.content;
-        
-        this.props.stylesheets.forEach(url => {
-            const ref = document.createElement('link');
-            ref.rel = 'stylesheet';
-            ref.type = 'text/css';
-            ref.href = url;
-            head.appendChild(ref);
-        });
-        */
-    }
-
-    /**
-     * This component renders just and iframe
-     */
-    render() {
-        return <iframe ref="iframe"  id="rpt" width="400" height="200" />
-    }
-}
 
 
 export default class Home extends React.Component {
@@ -107,11 +45,14 @@ export default class Home extends React.Component {
       defEndDate: Moment().toDate(),
       startDate: Moment().startOf('month'),
       endDate: new Moment(),
-      content: `<h1>Title</h1><button class="btn btn-primary">Test</button>`,
-      counter: 0,
-      styles: [
-          'https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css'
-      ]
+      plt2Checked: false, 
+      plt3Checked: false, 
+      plt5Checked: false, 
+      plt6Checked: false, 
+      plt7Checked: false, 
+      plt8Checked: false, 
+      plt9Checked: false, 
+      plt11Checked: false 
 
     };
 
@@ -122,9 +63,15 @@ export default class Home extends React.Component {
     // This binding is necessary to make `this` work in the callback
     this.handleSubmit = this.handleSubmit.bind(this);
     // This binding is necessary to make `this` work in the callback
-    this.afterReport = this.afterReport.bind(this);
+    this.plt2Change = this.plt2Change.bind(this);
+    this.plt3Change = this.plt3Change.bind(this);
+    this.plt5Change = this.plt5Change.bind(this);
+    this.plt6Change = this.plt6Change.bind(this);
+    this.plt7Change = this.plt7Change.bind(this);
+    this.plt8Change = this.plt8Change.bind(this);
+    this.plt9Change = this.plt9Change.bind(this);
+    this.plt11Change = this.plt11Change.bind(this);
 
-          this.increaseCounter = this.increaseCounter.bind(this);
   
 
   }
@@ -138,8 +85,21 @@ export default class Home extends React.Component {
     }
 
   validateForm() {
-    return this.validateDate()==='success';
+    return ((this.validateDate()==='success')&&(this.validatePlantList()==='success'));
   }
+
+  validatePlantList() {
+    if(
+        (true===this.state.plt2Checked)||(true===this.state.plt3Checked)
+        ||(true===this.state.plt5Checked)||(true===this.state.plt6Checked)
+        ||(true===this.state.plt7Checked)||(true===this.state.plt8Checked)
+        ||(true===this.state.plt9Checked)||(true===this.state.plt11Checked)
+    ){
+       return "success";
+     }else{
+        return "error";
+     }
+   }
 
   validateDate() {
     if(
@@ -207,169 +167,73 @@ export default class Home extends React.Component {
     }
   }
 
-afterReport(res){
 
-    var html = '<html>' +
-            '<style>html,body {padding:0;margin:0;} iframe {width:100%;height:100%;border:0}</style>' +
-            '<body>' +                                
-            '<iframe type="application/pdf" src="' +  res.toDataURI() + '"></iframe>' +
-            '</body></html>';
-
-    const iframe = this.refs.iframe;
-    const document = iframe.contentDocument;
-    document.body.innerHTML = html;
-
-
-  //    var document =  document.getElementById('rpt2').contentDocument;
-//document.body.innerHTML = html;      
-
- //   this.setState({content: str});
-//    this.setState({content: `<h1>Title</h1><button class="btn btn-primary">Test2</button>`});
-
-//    var str = res.toDataURI();
-//    var str2 = res.toString();
-//   window.open(res.toDataURI())
-    this.setState({ isLoading: false });    
-}
 
   handleSubmit = async event => {
     event.preventDefault();
  //   this.setState({ isLoading: true });
     try {
-//      await this.login(this.state.email, this.state.password);
-//      this.props.userHasAuthenticated(true);
-//      this.props.history.push("/home");
 
-//add custom headers to ajax calls
-jsreport.headers['Authorization'] = "Basic " + btoa("admin:password");
-/*
-var request = {
-   template: { 
-        name: 'WorkSumTransactions',
-    },
-    data:{
-      "dtStart": "01-1-2017 00:00:00",
-      "dtEnd": "01-12-2017 23:15:10",
-      "partNumber":"M0009326"
-    }
-};
+      //add custom headers to ajax calls
+      jsreport.headers['Authorization'] = "Basic " + btoa("admin:password");
+      /*
+      var request = {
+         template: { 
+              name: 'WorkSumTransactions',
+          },
+          data:{
+            "dtStart": "01-1-2017 00:00:00",
+            "dtEnd": "01-12-2017 23:15:10",
+            "partNumber":"M0009326"
+          }
+      };
 
-//display report in the new tab
-jsreport.render('_blank', request);
-*/
-var dtStart=this.state.startDate.format('MM-DD-YYYY h:mm:ss');
+      //display report in the new tab
+      jsreport.render('_blank', request);
+      */
+      var dtStart=this.state.startDate.format('MM-DD-YYYY h:mm:ss');
 
 
-var dtEnd=this.state.endDate.format('MM-DD-YYYY h:mm:ss');
-//var dtStart=this.startDate.format('MM-DD-YYYY HH:MM:SS');
-var request2 = {
-   template: { 
-        name: 'WorkSumByPlant',
-    },
-    data:{
-      "dtStart": '',
-      "dtEnd": '',
-      "plantList":",2,3,5,6,"
-    }
+      var dtEnd=this.state.endDate.format('MM-DD-YYYY h:mm:ss');
+      //var dtStart=this.startDate.format('MM-DD-YYYY HH:MM:SS');
+      var request2 = {
+         template: { 
+              name: 'WorkSumByPlant',
+          },
+          data:{
+            "dtStart": '',
+            "dtEnd": '',
+            "plantList":",2,3,5,6,"
+          }
 
-};
+      };
 
-request2.data.dtStart = dtStart;
-request2.data.dtEnd = dtEnd;
+      request2.data.dtStart = dtStart;
+      request2.data.dtEnd = dtEnd;
+request2.data.plantList=','
+      if(this.state.plt2Checked===true) request2.data.plantList += '2,';
+      if(this.state.plt3Checked===true) request2.data.plantList += '3,';
+      if(this.state.plt5Checked===true) request2.data.plantList += '5,';
+      if(this.state.plt6Checked===true) request2.data.plantList += '6,';
+      if(this.state.plt7Checked===true) request2.data.plantList += '7,';
+      if(this.state.plt8Checked===true) request2.data.plantList += '8,';
+      if(this.state.plt9Checked===true) request2.data.plantList += '9,';
+      if(this.state.plt11Checked===true) request2.data.plantList += '11,';
 
-//display report in the new tab
-//const newUser = await jsreport.render('reportPlaceholder', request2);
-    //this.setState({ step: 2 });    
 
-//var t=5;
-
-
-jsreport.render('_blank', request2);
-//alert('sync ?');
-
-
-//jsreport.renderAsync(request2).then(this.afterReport)
-/*
-jsreport.renderAsync(request2).then(function(res) {
-  console.log(res);
-
-  //open in new window
-   window.open(res.toDataURI())
-
-  //open download dialog
-//  res.download('test.pdf')
-});
-*/
-/*
-   jsreport.renderAsync('reportPlaceholder',{
- //       template: { shortid:"r1omgHrLe"},
-        //data: { dtStart: "01-17-2017 00:00:00",dtEnd:"01-18-2017 23:15:10"}
-            template: { 
-                name: 'WorkSumTransactions',
-            },
-            data:{
-              "dtStart": "01-1-2017 00:00:00",
-              "dtEnd": "01-12-2017 23:15:10",
-              "partNumber":"M0009326"
-            }
-
-        // data: { subject: "Busche Order",po: "122572",emailTo:"bgroves3196@yahoo.com"}
-    });
-    */
-/*
-   jsreport.render({
- //       template: { shortid:"r1omgHrLe"},
-        //data: { dtStart: "01-17-2017 00:00:00",dtEnd:"01-18-2017 23:15:10"}
-            template: { 
-                name: 'WorkSumTransactions',
-            },
-            data:{
-              "dtStart": "01-1-2017 00:00:00",
-              "dtEnd": "01-12-2017 23:15:10",
-              "partNumber":"M0009326"
-            }
-
-        // data: { subject: "Busche Order",po: "122572",emailTo:"bgroves3196@yahoo.com"}
-    }, function(err, response) {
-        if(err){
-          alert('error');
-        }else{
-          response.body(function(body) {
-        console.log(body.toString());            
-            /*
-            var dirName2 = dirName1;
-            let fileName =  dirName2 + '/myfile.pdf';
-            if ('development'==process.env.NODE_ENV) {
-              console.log(`dirName: ${dirName}`);
-              console.log(`dirName1: ${dirName1}`);
-              console.log(`dirName2: ${dirName2}`);
-              console.log(`fileName: ${fileName}`);
-            }
-
-            fs.writeFileSync(fileName,body);
-            dispatch({ type:ACTION.SET_POWITHRECEIVERS_REPORT_DONE, done:true });
-            if ('development'==process.env.NODE_ENV) {
-              console.log(`Done creating file myfile.pdf `);
-              console.log(`fileName: ${fileName}`);
-            }
-            ipcRenderer.send('asynchronous-message', fileName)
-          });
-        }
-    });
-*/
-/*
-        jsreport.render({ 
-            template: { 
-                name: 'WorkSumTransactions',
-            },
-            data:{
-              "dtStart": "01-1-2017 00:00:00",
-              "dtEnd": "01-12-2017 23:15:10",
-              "partNumber":"M0009326"
-            }
-        });
-*/
-  //    this.setState({ isLoading: false });
+      jsreport.render('_blank', request2);
+      /*
+              jsreport.render({ 
+                  template: { 
+                      name: 'WorkSumTransactions',
+                  },
+                  data:{
+                    "dtStart": "01-1-2017 00:00:00",
+                    "dtEnd": "01-12-2017 23:15:10",
+                    "partNumber":"M0009326"
+                  }
+              });
+      */
 
     } catch (e) {
       alert(e);
@@ -377,6 +241,72 @@ jsreport.renderAsync(request2).then(function(res) {
     }
 
   }
+
+  plt2Change = (event) => {
+//    this.setState({ checkboxChecked: evt.target.checked });
+    this.setState({
+     plt2Checked: event.target.checked
+    });
+  }
+
+  plt3Change = (event) => {
+//    this.setState({ checkboxChecked: evt.target.checked });
+    this.setState({
+     plt3Checked: event.target.checked
+    });
+  }
+  plt5Change = (event) => {
+//    this.setState({ checkboxChecked: evt.target.checked });
+    this.setState({
+     plt5Checked: event.target.checked
+    });
+  }
+  plt6Change = (event) => {
+//    this.setState({ checkboxChecked: evt.target.checked });
+    this.setState({
+     plt6Checked: event.target.checked
+    });
+  }
+  plt7Change = (event) => {
+//    this.setState({ checkboxChecked: evt.target.checked });
+    this.setState({
+     plt7Checked: event.target.checked
+    });
+  }
+  plt8Change = (event) => {
+//    this.setState({ checkboxChecked: evt.target.checked });
+    this.setState({
+     plt8Checked: event.target.checked
+    });
+  }
+  plt9Change = (event) => {
+//    this.setState({ checkboxChecked: evt.target.checked });
+    this.setState({
+     plt9Checked: event.target.checked
+    });
+  }
+  plt11Change = (event) => {
+//    this.setState({ checkboxChecked: evt.target.checked });
+    this.setState({
+     plt11Checked: event.target.checked
+    });
+  }
+
+  pltAllChange = (event) => {
+//    this.setState({ checkboxChecked: evt.target.checked });
+    this.setState({
+     plt2Checked: event.target.checked,
+     plt3Checked: event.target.checked,
+     plt5Checked: event.target.checked,
+     plt6Checked: event.target.checked,
+     plt7Checked: event.target.checked,
+     plt8Checked: event.target.checked,
+     plt9Checked: event.target.checked,
+     plt11Checked: event.target.checked
+
+    });
+  }
+/* Dennis 1 Nov 2017 - 28 Nov  1 Sep - 28 Nov */
  
   render() {
 
@@ -387,37 +317,27 @@ jsreport.renderAsync(request2).then(function(res) {
       }else{
         dateHeader=<h1 style={{textAlign:'center'}}>Date Range Error</h1>;
       }
-
       dateStyle='default';
-      /*
-      var mmtStart = new Moment();
-      mmtStart.add(1,'days');
-      var  defStartDate = mmtStart.toDate(); 
-      */
 
-        const content = this.state.content;
-        const counter = this.state.counter;
-        const styles = this.state.styles;
+      var plantHeader;  
+      var plantStyle; 
+      plantHeader=<h1 style={{textAlign:'center'}}>Select Plant(s)</h1>;
+      plantStyle='default';
+
+
 var myForm;
 
 if(this.state.step===1){
 myForm =
         <form onSubmit={this.handleSubmit}>
-        <Row>
-           <Col xs={2} > 
-           </Col> 
-            <Col xs={8} style={{}}> 
+          <Row>  
+            <Col xs={2} >  
+            </Col>  
+            <Col xs={8} style={{}}>  
 
                <Panel  className="ToolCostSummaryByPlant" bsStyle={dateStyle} header={dateHeader}> 
-                 <Row> 
-                   <Col xs={1} > 
-                   </Col> 
-                   <Col xs={10} style={{}}> 
                       <FormGroup controlId="startDate" validationState={this.validateDate()}  bsSize="large">
-                      <Row>
-
                         <ControlLabel>Start</ControlLabel>
-                        </Row>
                          <Row> 
                            <Col xs={11} style={{}}> 
                             <DateTimePicker 
@@ -430,19 +350,8 @@ myForm =
                            </Col> 
                          </Row> 
                       </FormGroup>
-                   </Col>
-                   <Col xs={1} > 
-                   </Col> 
-                 </Row> 
-                 <Row> 
-                   <Col xs={1} > 
-                   </Col> 
-                   <Col xs={10} style={{}}> 
                       <FormGroup controlId="endDate" validationState={this.validateDate()}  bsSize="large">
-                      <Row>
                         <ControlLabel>End</ControlLabel>
-                        </Row>
-
                          <Row> 
                            <Col xs={11} style={{}}> 
                               <DateTimePicker 
@@ -455,16 +364,77 @@ myForm =
                            </Col>
                          </Row> 
                       </FormGroup>
-                   </Col> 
-                   <Col xs={1} > 
-                   </Col> 
-                 </Row> 
                </Panel> 
-             </Col> 
-             <Col xs={2} > 
-             </Col> 
-           </Row> 
-           <Row> 
+             </Col>
+            <Col xs={1} >  
+            </Col>  
+          </Row>
+          <Row>  
+            <Col xs={2} >  
+            </Col>  
+            <Col xs={8} style={{}}>  
+              <Panel  className="ToolCostSummaryByPlant" bsStyle={plantStyle} header={plantHeader}> 
+                <FormGroup controlId="plt2Checked" >
+                  <Checkbox inline 
+                    checked={this.state.plt2Checked}
+                    onChange={this.plt2Change} >
+                    2
+                  </Checkbox>
+                  {' '}
+                  <Checkbox inline 
+                    checked={this.state.plt3Checked}
+                    onChange={this.plt3Change} >
+                    3
+                  </Checkbox>
+                  {' '}
+                  <Checkbox inline 
+                    checked={this.state.plt5Checked}
+                    onChange={this.plt5Change} >
+                    5
+                  </Checkbox>
+                  {' '}
+                  <Checkbox inline 
+                    checked={this.state.plt6Checked}
+                    onChange={this.plt6Change} >
+                    6
+                  </Checkbox>
+                  {' '}
+                  <Checkbox inline 
+                    checked={this.state.plt7Checked}
+                    onChange={this.plt7Change} >
+                    7
+                  </Checkbox>
+                  {' '}
+                  <Checkbox inline 
+                    checked={this.state.plt8Checked}
+                    onChange={this.plt8Change} >
+                    8
+                  </Checkbox>
+                  {' '}
+                  <Checkbox inline 
+                    checked={this.state.plt9Checked}
+                    onChange={this.plt9Change} >
+                    9
+                  </Checkbox>
+                  {' '}
+                  <Checkbox inline 
+                    checked={this.state.plt11Checked}
+                    onChange={this.plt11Change} >
+                    11
+                  </Checkbox>
+                  {' '}
+                  <Checkbox inline 
+                    checked={this.state.plt11Checked}
+                    onChange={this.pltAllChange} >
+                    All
+                  </Checkbox>
+                </FormGroup>
+              </Panel>
+            </Col>
+            <Col xs={2} >  
+            </Col>  
+          </Row>
+          <Row> 
               <Col xs={5} >&nbsp;</Col> 
               <Col xs={2}>
                <LoaderButton
@@ -477,7 +447,7 @@ myForm =
                   loadingText="Running…"
                 />
               </Col> 
-             <Col xs={5}>&nbsp;</Col> 
+              <Col xs={5}>&nbsp;</Col> 
            </Row> 
          </form>
 }else{
@@ -488,7 +458,6 @@ myForm =
     return (
       <div >
       {myForm}
-       <div id="reportPlaceholder" width="400" height="800"></div>
 
  
  
