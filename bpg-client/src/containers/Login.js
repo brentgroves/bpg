@@ -68,7 +68,7 @@ export default class Login extends Component {
     try {
       await this.login(this.state.email, this.state.password);
       this.props.userHasAuthenticated(true);
-      this.props.history.push("/tcsbyplant");
+      this.props.history.push("/home");
     } catch (e) {
       alert(e);
       this.setState({ isLoading: false });

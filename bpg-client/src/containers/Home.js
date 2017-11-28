@@ -7,7 +7,7 @@ export default class Home extends Component {
       <div className="Home">
         <div className="lander">
           <h1>Busche Reporter</h1>
-          <p>A web based reporting app</p>
+          <p>Please select a report...</p>
         </div>
       </div>
     );

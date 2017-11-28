@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import { Link, withRouter } from "react-router-dom";
-import { Nav,NavItem,Navbar } from "react-bootstrap";
+import { Nav,NavItem,Navbar,Row,Col,Accordion,Panel,ListGroup,ListGroupItem } from "react-bootstrap";
 import "./App.css";
 import Routes from "./Routes";
 import RouteNavItem from "./components/RouteNavItem";
@@ -77,7 +77,54 @@ class App extends Component {
           </Navbar.Collapse>
 
         </Navbar>
-        <Routes childProps={childProps} />
+        {this.state.isAuthenticated
+        ? [
+        <Row>
+           <Col xs={3} > 
+            <Accordion>
+              <Panel header="Engineering" eventKey="1">
+                <ListGroup>
+                  <ListGroupItem onClick={() => {this.props.history.push("/tcsbyplant");}}>Tool Cost Summary by Plant</ListGroupItem>
+                  <ListGroupItem>Item 2</ListGroupItem>
+                  <ListGroupItem>...</ListGroupItem>
+                </ListGroup>
+              </Panel>
+              <Panel header="Production" eventKey="2">
+                <ListGroup>
+                  <ListGroupItem onClick={() => {this.props.history.push("/tcsbyplant");}}>Tool Cost Summary by Plant</ListGroupItem>
+                  <ListGroupItem>Item 2</ListGroupItem>
+                  <ListGroupItem>...</ListGroupItem>
+                </ListGroup>
+              </Panel>
+              <Panel header="Purchasing" eventKey="3">
+                <ListGroup>
+                  <ListGroupItem onClick={() => {this.props.history.push("/tcsbyplant");}}>Tool Cost Summary by Plant</ListGroupItem>
+                  <ListGroupItem>Item 2</ListGroupItem>
+                  <ListGroupItem>...</ListGroupItem>
+                </ListGroup>
+              </Panel>
+              <Panel header="Quality" eventKey="4">
+                <ListGroup>
+                  <ListGroupItem onClick={() => {this.props.history.push("/tcsbyplant");}}>Tool Cost Summary by Plant</ListGroupItem>
+                  <ListGroupItem>Item 2</ListGroupItem>
+                  <ListGroupItem>...</ListGroupItem>
+                </ListGroup>
+              </Panel>
+              <Panel header="Sales" eventKey="5">
+                <ListGroup>
+                  <ListGroupItem onClick={() => {this.props.history.push("/tcsbyplant");}}>Tool Cost Summary by Plant</ListGroupItem>
+                  <ListGroupItem>Item 2</ListGroupItem>
+                  <ListGroupItem>...</ListGroupItem>
+                </ListGroup>
+              </Panel>
+            </Accordion>
+           </Col> 
+            <Col xs={9} style={{}}> 
+              <Routes childProps={childProps} />
+            </Col>
+          </Row>
+         ] : <Routes childProps={childProps} />}
+
       </div>
     );
   }

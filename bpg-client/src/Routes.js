@@ -10,7 +10,7 @@ import AppliedRoute from "./components/AppliedRoute";
 export default ({ childProps }) =>
   <Switch>
     <AppliedRoute path="/" exact 
-    component={ childProps.isAuthenticated ? ToolCostSummaryByPlant : Home } 
+    component={ childProps.isAuthenticated ? Home : Home } 
     props={childProps} />
     <AppliedRoute path="/home" exact component={Home} props={childProps} />
 
@@ -23,3 +23,10 @@ export default ({ childProps }) =>
 	<Route component={NotFound} />
   </Switch>;
 
+
+/*
+    <AppliedRoute path="/" exact 
+    component={ childProps.isAuthenticated ? ToolCostSummaryByPlant : Home } 
+    props={childProps} />
+    <AppliedRoute path="/home" exact component={Home} props={childProps} />
+*/
