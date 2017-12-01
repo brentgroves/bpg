@@ -59,7 +59,7 @@ function beforeRender(done) {
             console.log(result.output) // key/value collection of output values
             console.log(result.rowsAffected) // array of numbers, each number represents the number of rows affected by executed statemens
             request.data = {
-                transaction: result.recordset,
+                transactions: result.recordset,
                 generatedOn: generatedOn,
                 dtStart: dtStart,
                 dtEnd: dtEnd,

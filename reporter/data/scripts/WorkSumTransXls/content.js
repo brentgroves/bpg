@@ -29,27 +29,29 @@ var cribDefTO = {
     }
 }
 
+
 function beforeRender(done) {
+//Object.assign(request.data, { transactions: recordset })
     //       var dtStart =Moment(new Date()).format("MM-DD-YYYY hh:mm:ss");
     //       var dtEnd =Moment(new Date()).format("MM-DD-YYYY hh:mm:ss");
     console.log('hello2');
     console.log(request.data.dtStart);
     console.log(request.data.dtEnd);
-    console.log(request.data.dept);
+    console.log(request.data.partNumber);
     //        done();
 
     sql.connect(config).then(function(err) {
         console.log(err);
         var dtStart = request.data.dtStart;
         var dtEnd = request.data.dtEnd;
-        var plantList = request.data.plantList;
+        var partNumber = request.data.partNumber;
         var reqSql = new sql.Request();
         reqSql.input('dtStart', sql.VarChar(20), dtStart);
         reqSql.input('dtEnd', sql.VarChar(20), dtEnd);
-        reqSql.input('plantList',sql.VarChar(50),plantList);
+        reqSql.input('partNumber', sql.VarChar(25), partNumber);
         console.log('***before bpGRPOStatusRpt call');
 
-        return reqSql.execute('bpWorkSumPlantHTML', (err, result) => {
+        return reqSql.execute('bpWorkSumTransactionsHTML', (err, result) => {
             // ... error checks
             var dateNow = new Date();
             var generatedOn = dateNow.toLocaleString();
@@ -60,24 +62,39 @@ function beforeRender(done) {
             console.log(result.returnValue) // procedure return value
             console.log(result.output) // key/value collection of output values
             console.log(result.rowsAffected) // array of numbers, each number represents the number of rows affected by executed statemens
-            request.data = {
-                summary: result.recordset,
+            Object.assign(request.data, {
+                transactions: result.recordset,
                 generatedOn: generatedOn,
                 dtStart: dtStart,
-                dtEnd: dtEnd
+                dtEnd: dtEnd,
+                partNumber:partNumber
+            });
+
+/*
+//old
+request.data = { countries: recordset };
+//new
+Object.assign(request.data, { countries: recordset })
+
+            request.data = {
+                transactions: result.recordset,
+                generatedOn: generatedOn,
+                dtStart: dtStart,
+                dtEnd: dtEnd,
+                partNumber:partNumber
             };
-        
+*/        
             done();
         });
     }).catch(done);
 
 }
-
+/*
 function afterRender(req, res, done) {
     //filter out script execution for phantom header
     if (req.options.isChildRequest) {
         return done();
     }
     return done();
-
 }
+*/

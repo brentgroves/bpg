@@ -3,19 +3,32 @@
 <head>
   <meta charset="UTF-8">
   <title>NorthWind Dashboard</title>
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
 <script src="//cdnjs.cloudflare.com/ajax/libs/numeral.js/2.0.6/numeral.min.js"></script>
 <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/v/dt/dt-1.10.16/rg-1.0.2/datatables.min.css"/>
- 
 <script type="text/javascript" src="https://cdn.datatables.net/v/dt/dt-1.10.16/rg-1.0.2/datatables.min.js"></script>
 
 </head>
 <body>
+<div class="container"> 
+     <div class="row" >
+        <div class="col-xs-8 text-right " >{{date dtStart "ll"}}
+        To {{date dtEnd "ll"}}        
+        </div>
+        <div class="col-xs-4" >&nbsp;</div>
+      </div>
+</div>      
 <table id="example" class="display" cellspacing="0" width="100%">
     <thead>
         <tr>
 {{moment }}
-<!--    //       var dtStart =Moment(new Date()).format("MM-DD-YYYY hh:mm:ss"); -->
+<!--    
+       var dtStart =Moment(new Date()).format("MM-DD-YYYY hh:mm:ss"); 
+        <div class="col-xs-8 text-right " >date "dtStart" "ll"
+
+-->
 
         {{#ifCond2 "1" "1"}}
         "block"
