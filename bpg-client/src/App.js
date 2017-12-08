@@ -21,6 +21,7 @@ class App extends Component {
       isAuthenticated: false,
       isAuthenticating: true
     };
+
   }
   async componentDidMount() {
     try {
@@ -33,6 +34,8 @@ class App extends Component {
     }
 
     this.setState({ isAuthenticating: false });
+
+
   }
 
   userHasAuthenticated = authenticated => {
