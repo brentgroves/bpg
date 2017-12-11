@@ -46,28 +46,22 @@ reqSql.query('select count(*) as notCurrent from ssis where uptodate = 0',
     (err, result) => {
     // ... error checks
 
-    console.log(result.recordset[0].notCurrent) // return 1
-    
-            console.log(result.recordsets.length) // count of recordsets returned by the procedure
-            console.log(result.recordsets[0].length) // count of rows contained in first recordset
-            console.log(result.recordset) // first recordset from result.recordsets
-            console.log(result.returnValue) // procedure return value
-            console.log(result.output) // key/value collection of output values
-            console.log(result.rowsAffected) // array of numbers, each number represents the number of rows affected by executed statemens
+//    console.log(result.recordset[0].notCurrent) // return 1
+    var obj1=result.recordset[0];
 
         var reqSql = new sql.Request();            
             reqSql.query('select * from btreportacc', (err, result) => {
                 // ... error checks
-            
-                console.log(result.recordset[0].NoToolListCnt) // return 1
-                var myJSON = JSON.stringify(result.recordset[0]);
+           var obj2 = result.recordset[0]
+var final = {};
+for(var key in obj1) final[key] = obj1[key];
+for(var key in obj2) final[key] = obj2[key];
+                var myJSON = JSON.stringify(final);
+                
+                //var obj = { "name":"John", "age":30, "city":"New York"};
+                //var myJSON = JSON.stringify(obj)
+                //var t =myJSON.replace(/&quot;/g,'"'); // can't get this to work
                 console.log(myJSON)
-                        console.log(result.recordsets.length) // count of recordsets returned by the procedure
-                        console.log(result.recordsets[0].length) // count of rows contained in first recordset
-                        console.log(result.recordset) // first recordset from result.recordsets
-                        console.log(result.returnValue) // procedure return value
-                        console.log(result.output) // key/value collection of output values
-                        console.log(result.rowsAffected) // array of numbers, each number represents the number of rows affected by executed statemens
                         request.data = {
                             summary: result.recordset,
                             myJSON: myJSON
